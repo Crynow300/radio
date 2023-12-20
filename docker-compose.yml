@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  stream:
+    image: ubuntu:22.04
+    container_name: stream
+    privileged: true
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./etc/icecast2/icecast.xml:/etc/icecast2/icecast.xml
+      - ./etc/ezstream/ezstream.xml:/etc/ezstream/ezstream.xml
+      - ./changes.sh:/changes.sh
+      - ./music:/music
+      - ./etc/supervisor/conf.d:/etc/supervisor/conf.d
+      - ./supervisor_log:/var/log/supervisor
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    command: bash -c "apt update && echo "N" | apt install -y icecast2 && apt install -y inotify-tools ezstream wget rename madplay lame supervisor && apt remove -y ezstream && wget http://ge.archive.ubuntu.com/ubuntu/pool/universe/e/ezstream/ezstream_1.0.1-1_amd64.deb && dpkg -i ezstream_1.0.1-1_amd64.deb && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
