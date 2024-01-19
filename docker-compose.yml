@@ -1,20 +1,73 @@
 version: '3.9'
 
 services:
-  stream:
+  darkwave_stream:
     image: ubuntu:22.04
-    container_name: stream
-    privileged: true
+    container_name: darkwave-stream
     restart: unless-stopped
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - ./etc/icecast2/icecast.xml:/etc/icecast2/icecast.xml
       - ./etc/ezstream/ezstream.xml:/etc/ezstream/ezstream.xml
       - ./changes.sh:/changes.sh
-      - ./music:/music
+      - ./music/Darkwave:/music
       - ./etc/supervisor/conf.d:/etc/supervisor/conf.d
       - ./supervisor_log:/var/log/supervisor
     environment:
       - DEBIAN_FRONTEND=noninteractive
-    command: bash -c "apt update && echo "N" | apt install -y icecast2 && apt install -y inotify-tools ezstream wget rename madplay lame supervisor && apt remove -y ezstream && wget http://ge.archive.ubuntu.com/ubuntu/pool/universe/e/ezstream/ezstream_1.0.1-1_amd64.deb && dpkg -i ezstream_1.0.1-1_amd64.deb && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+    command: bash -c "apt update && echo "N" | apt install -y icecast2 && apt install -y inotify-tools ezstream wget rename madplay lame supervisor && apt remove -y ezstream && wget http://ge.archive.ubuntu.com/ubuntu/pool/universe/e/ezstream/ezstream_1.0.1-1_amd64.deb && dpkg -i ezstream_1.0.1-1_amd64.deb && rm -f ezstream_1.0.1-1_amd64* && ./changes.sh && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+
+  postpunk_stream:
+    image: ubuntu:22.04
+    container_name: postpunk-stream
+    restart: unless-stopped
+    expose:
+      - "8000"
+    volumes:
+      - ./etc/icecast2/icecast.xml:/etc/icecast2/icecast.xml
+      - ./etc/ezstream/ezstream.xml:/etc/ezstream/ezstream.xml
+      - ./changes.sh:/changes.sh
+      - ./music/Postpunk:/music
+      - ./etc/supervisor/conf.d:/etc/supervisor/conf.d
+      - ./supervisor_log:/var/log/supervisor
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    command: bash -c "apt update && echo "N" | apt install -y icecast2 && apt install -y inotify-tools ezstream wget rename madplay lame supervisor && apt remove -y ezstream && wget http://ge.archive.ubuntu.com/ubuntu/pool/universe/e/ezstream/ezstream_1.0.1-1_amd64.deb && dpkg -i ezstream_1.0.1-1_amd64.deb && rm -f ezstream_1.0.1-1_amd64* && ./changes.sh && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+
+  godlesspunk_stream:
+    image: ubuntu:22.04
+    container_name: godlesspunk-stream
+    restart: unless-stopped
+    expose:
+      - "8000"
+    volumes:
+      - ./etc/icecast2/icecast.xml:/etc/icecast2/icecast.xml
+      - ./etc/ezstream/ezstream.xml:/etc/ezstream/ezstream.xml
+      - ./changes.sh:/changes.sh
+      - ./music/Godlesspunk:/music
+      - ./etc/supervisor/conf.d:/etc/supervisor/conf.d
+      - ./supervisor_log:/var/log/supervisor
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    command: bash -c "apt update && echo "N" | apt install -y icecast2 && apt install -y inotify-tools ezstream wget rename madplay lame supervisor && apt remove -y ezstream && wget http://ge.archive.ubuntu.com/ubuntu/pool/universe/e/ezstream/ezstream_1.0.1-1_amd64.deb && dpkg -i ezstream_1.0.1-1_amd64.deb && rm -f ezstream_1.0.1-1_amd64* && ./changes.sh && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+
+  cloudcmd:
+    image: coderaiser/cloudcmd
+    container_name: cloudcmd
+    restart: unless-stopped
+    expose:
+      - "8000"
+    volumes:
+      - "./cloudcmd.json:/root/.cloudcmd.json"
+      - "./music:/music"
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./etc/nginx/conf.d:/etc/nginx/conf.d
+      - ./html:/var/www/html
