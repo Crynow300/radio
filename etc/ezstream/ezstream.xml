@@ -16,7 +16,7 @@
   <servers>
     <server>
       <!-- Identifying name (default: "default") -->
-      <name>Test Server</name>
+      <name>Server</name>
 
       <!--
         Transport protocol:
@@ -84,70 +84,70 @@
   <!--
     Stream configuration
     -->
-  <streams>
-    <stream>
-      <!--
-	        Identifying name (default: "default")
+    <streams>
+      <stream>
+        <!--
+            Identifying name (default: "default")
 
-        NB: Only the "default" stream is supported at this point.
-        -->
-      <!-- <name>default</name> -->
+          NB: Only the "default" stream is supported at this point.
+          -->
+        <!-- <name>default</name> -->
 
-      <!-- Mount point on server -->
-      <mountpoint>/stream</mountpoint>
+        <!-- Mount point on server -->
+        <mountpoint>/stream</mountpoint>
 
-      <!-- Name of the intake entry to use (default: "default") -->
-      <intake>Test Input</intake>
+        <!-- Name of the intake entry to use (default: "default") -->
+        <intake>Intake</intake>
 
-      <!-- Name of the server entry to use (default: "default") -->
-      <server>Test Server</server>
+        <!-- Name of the server entry to use (default: "default") -->
+        <server>Server</server>
 
-      <!--
-        Setting to allow stream to be listed in public YP directory
-        (default: no)
-        -->
-      <public>No</public>
+        <!--
+          Setting to allow stream to be listed in public YP directory
+          (default: no)
+          -->
+        <public>No</public>
 
-      <!-- Stream format: Ogg, MP3, WebM, Matroska -->
-      <format>MP3</format>
-      <!-- Encoder name (defined below) to use for (re)encoding -->
-      <encoder>Lame-CBR128</encoder>
+        <!-- Stream format: Ogg, MP3, WebM, Matroska -->
+        <format>MP3</format>
+        <!-- Encoder name (defined below) to use for (re)encoding -->
+        <encoder>Lame-CBR128</encoder>
 
-      <!-- Various other informational settings -->
-      <stream_name>Test Stream</stream_name>
-      <stream_url>localhost:8000/</stream_url>
-      <stream_genre>Beeps</stream_genre>
-      <stream_description>Test tones and noise</stream_description>
-      <stream_quality>1.5</stream_quality>
-      <stream_bitrate>32</stream_bitrate>
-      <stream_samplerate>44100</stream_samplerate>
-      <stream_channels>2</stream_channels>
-    </stream>
-  </streams>
+        <!-- Various other informational settings -->
+        <stream_name>Stream</stream_name>
+        <stream_url>localhost:8000/</stream_url>
+        <stream_genre>Streaming</stream_genre>
+        <stream_description>Streaming stream</stream_description>
+        <stream_quality>1.5</stream_quality>
+        <stream_bitrate>32</stream_bitrate>
+        <stream_samplerate>44100</stream_samplerate>
+        <stream_channels>2</stream_channels>
+      </stream>
+    </streams>
 
-  <!--
-    Intake configuration
-    -->
-  <intakes>
-    <intake>
-      <!-- Identifying name (default: "default") -->
-      <name>Test Input</name>
+    <!--
+      Intake configuration
+      -->
+    <intakes>
+      <intake>
+        <!-- Identifying name (default: "default") -->
+        <name>Intake</name>
 
-      <!--
-        Media type: autodetect, file, playlist, program, stdin
-       (default: autodetect)
-        -->
-      <type>playlist</type>
+        <!--
+          Media type: autodetect, file, playlist, program, stdin
+         (default: autodetect)
+          -->
+        <type>playlist</type>
 
-      <!-- Input file, program name, or "stdin" keyword (deprecated) -->
-      <filename>/music/playlist.m3u</filename>
-      <!-- Setting to shuffle playlists -->
-      <shuffle>Yes</shuffle>
+        <!-- Input file, program name, or "stdin" keyword (deprecated) -->
+        <filename>/music/playlist.m3u</filename>
+        <!-- Setting to shuffle playlists -->
+        <shuffle>Yes</shuffle>
 
-      <!-- Setting whether to stream intake indefinitely or only once -->
-      <stream_once>Yes</stream_once>
-    </intake>
-  </intakes>
+        <!-- Setting whether to stream intake indefinitely or only once -->
+        <stream_once>Yes</stream_once>
+      </intake>
+    </intakes>
 
   <!--
     Metadata configuration
@@ -227,5 +227,4 @@
       <program>lame --preset cbr 128 -r -s 44.1 --bitwidth 32 - -</program>
     </encoder>
   </encoders>
-
 </ezstream>
