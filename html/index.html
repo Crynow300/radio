@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="robots" content="noindex">
+  <meta charset="UTF-8">
+  <title>music.org.ru radio</title>
+  <style>
+     @font-face {
+        font-family: GOTHIC;
+        src: url("/GOTHIC.TTF");
+        }
+     body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+     #teleicon {
+	      position: absolute;
+	      bottom: 2%;
+	      right: 2%;
+	      padding: 0;
+	      transform: translateX(-50%);
+      }
+
+      #background-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      #background-select {
+	      position: absolute;
+	      top: 10%;
+	      left: 3%;
+	      margin: 0px;
+        color: white;
+        font-size: 20px;
+        text-shadow: 1px 1px 2px white, 0 0 1em black, 0 0 0.2em black;
+        border: none;
+        background: black;
+        opacity: 55%;
+      }
+
+      #wrapper {
+        position: absolute;
+        top: 30%;
+        left: 3%;
+        margin: 0px;
+        color: white;
+        font-size: 20px;
+        text-shadow: 1px 1px 2px white, 0 0 1em black, 0 0 0.2em black;
+        border: none;
+        background: none;
+        opacity: 55%;
+      }
+
+      input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        cursor: pointer;
+      }
+
+      input[type="radio"]:checked+label::before {
+        content: "";
+        display: ;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      label:hover {
+        letter-spacing: 3px;
+        background-color: black;
+        cursor: pointer;
+      }
+
+      .radio-wrapper div {
+        margin-bottom: 20px;
+      }
+
+      .selected {
+        letter-spacing: 3px;
+        background-color: black;
+        color: white;
+        font-weight: bold;
+      }
+
+      #h {
+        font-size: 30px;
+        color: white;
+        font-weight: bold;
+        letter-spacing: 5px;
+      }
+
+      #volumeSlider{
+        cursor: pointer;
+      }
+
+      #stopButton{
+        cursor: pointer;
+      }
+
+      #startButton{
+        cursor: pointer;
+      }
+
+      #countdown {
+        position: absolute;
+        bottom: 0%;
+        left: 51%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 20px;
+        text-shadow: 1px 1px 2px white, 0 0 1em black, 0 0 0.2em black;
+        font-family: GOTHIC;
+      }
+
+      #countdown-text {
+        position: absolute;
+        bottom: 3%;
+        left: 51%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 20px;
+        text-shadow: 1px 1px 2px white, 0 0 1em black, 0 0 0.2em black;
+        font-family: GOTHIC;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+
+<body>
+  <video id="background-video" autoplay loop muted playsinline webkit-playsinline>
+    <source src="uploads/backgrounds/background.mp4" type="video/mp4">
+  </video>
+
+  <a id="teleicon" href="https://t.me/+buLdfFXKV5UxODEy" target="_blank">
+    <img src="telegram.png" width="40" height="40">
+  </a>
+
+  <select id="background-select">
+    <option value="background.mp4">Серьёзные щи</option>
+    <option value="ny.mp4">Новый год</option>
+    <option value="ny1.mp4">Новый год 1</option>
+    <option value="lebeozero.mp4">Балет</option>
+    <option value="cave.mp4">Пещера</option>
+    <option value="winter1.mp4">Зима</option>
+    <option value="hny.mp4">С новым Годом</option>
+    <option value="background1.mp4">Огоньки</option>
+    <option value="background2.mp4">Планета</option>
+    <option value="cover.mp4">Ковер</option>
+  </select>
+<!--
+<div id="countdown-text">До смены плейлиста осталось</div>
+<div id="countdown"></div>
+
+  <script>
+    function countdown() {
+      var endDate = new Date("2024-02-01");
+      var currentDate = new Date();
+
+      var totalSeconds = (endDate - currentDate) / 1000;
+
+      var days = Math.floor(totalSeconds / (60 * 60 * 24));
+      var hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+      var minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      var seconds = Math.floor(totalSeconds % 60);
+
+      document.getElementById("countdown").innerHTML = days + "д " + hours + "ч " + minutes + "м " + seconds + "с";
+    }
+
+    setInterval(countdown, 1000);
+  </script>
+-->
+  <form class="radio-wrapper" id="wrapper">
+    <div id="h">Станции:</div>
+    <div>
+      <input type="radio" id="audio1" name="audio" value="http://localhost/postpunk">
+      <label for="audio1">Postpunk</label>
+    </div>
+    <div>
+      <input type="radio" id="audio2" name="audio" value="http://localhost/darkwave">
+      <label for="audio2">Darkwave</label>
+    </div>
+    <div>
+      <input type="radio" id="audio3" name="audio" value="http://localhost/godlesspunk">
+      <label for="audio3">Godlesspunk</label>
+    </div>
+    <div class="audio-controls" id="controls">
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+      <button id="stopButton">Stop</button>
+      <button id="startButton">Start</button>
+    </div>
+  </form>
+
+  <br>
+
+  <audio id="audioPlayer" preload="metadata">
+    <source src="" type="audio/mpeg">
+  </audio>
+
+  <script>
+    document.querySelectorAll('input[name="audio"]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        // Удаляем класс selected у всех названий
+        document.querySelectorAll('label').forEach(function(label) {
+          label.classList.remove('selected');
+        });
+        // Добавляем класс selected к выбранному названию
+        var selectedLabel = document.querySelector('input[name="audio"]:checked+label');
+        selectedLabel.classList.add('selected');
+      });
+    });
+  </script>
+  <script>
+    var audioPlayer = document.getElementById('audioPlayer');
+    var volumeSlider = document.getElementById('volumeSlider');
+    var stopButton = document.getElementById('stopButton');
+    var startButton = document.getElementById('startButton');
+
+    document.querySelectorAll('input[name="audio"]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        var selectedAudio = document.querySelector('input[name="audio"]:checked').value;
+        audioPlayer.src = selectedAudio + '?t=' + Date.now();
+        audioPlayer.volume = 1;
+        audioPlayer.play();
+        stopButton.disabled = false;
+        startButton.disabled = true;
+      });
+    });
+
+    volumeSlider.addEventListener('input', function() {
+      audioPlayer.volume = volumeSlider.value;
+    });
+
+    stopButton.addEventListener('click', function() {
+      audioPlayer.src = "";
+      stopButton.disabled = true;
+      startButton.disabled = false;
+    });
+
+    startButton.addEventListener('click', function() {
+      var selectedAudio = document.querySelector('input[name="audio"]:checked').value;
+      audioPlayer.src = selectedAudio + '?t=' + Date.now();
+      audioPlayer.volume = 1;
+      audioPlayer.play();
+      stopButton.disabled = false;
+      startButton.disabled = true;
+    });
+
+    volumeSlider.addEventListener('input', function() {
+      audioPlayer.volume = volumeSlider.value;
+    });
+  </script>
+  <script>
+    function showBackgroundList() {
+      var button = document.getElementById("background-button");
+      var select = document.getElementById("background-select");
+      var videoElement = document.getElementById("background-video");
+
+      select.style.display = "block";
+
+      select.onchange = function() {
+        var selectedValue = select.value;
+        var newBackgroundPath = "uploads/backgrounds/" + selectedValue;
+
+        sessionStorage.setItem("selectedBackground", newBackgroundPath);
+
+        videoElement.src = newBackgroundPath;
+
+        button.style.display = "block";
+      };
+    }
+
+    var selectedBackground = sessionStorage.getItem("selectedBackground");
+    if (selectedBackground) {
+      var videoElement = document.getElementById("background-video");
+        videoElement.src = selectedBackground;
+      }
+      showBackgroundList();
+    </script>
+  </body>
+  </html>
