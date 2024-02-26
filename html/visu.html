@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        canvas {
+            width: 600px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <audio id="audio" controls src="https://music.org.ru/stream"></audio>
+    <canvas id="visualizer"></canvas>
+
+    <script>
+        // Получаем элементы аудио и холст
+        const audioElement = document.getElementById('audio');
+        const canvasElement = document.getElementById('visualizer');
+        const canvasContext = canvasElement.getContext('2d');
+
+        // Изменяем размеры холста
+        canvasElement.width = canvasElement.offsetWidth;
+        canvasElement.height = canvasElement.offsetHeight;
+
+        // Функция для визуализации аудио
+        function visualize() {
+            // Получаем аудио-контекст и анализатор аудио
+            const audioContext = new AudioContext();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audioElement);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            // Устанавливаем размеры массива данных для анализатора
+            analyser.fftSize = 2048;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            // Очищаем холст перед рисованием нового кадра
+            function clearCanvas() {
+                canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            }
+
+            // Рисуем визуализацию аудио
+            function draw() {
+                // Получаем данные из анализатора
+                analyser.getByteFrequencyData(dataArray);
+
+                // Очищаем холст
+                clearCanvas();
+
+                // Настраиваем параметры для рисования
+                const barWidth = (canvasElement.width / bufferLength) * 2.5;
+                const centerX = canvasElement.width / 2;
+                const centerY = canvasElement.height / 2;
+
+                // Рисуем волны вокруг центра холста
+                for (let i = 0; i < bufferLength; i++) {
+                    const angle = i * (2 * Math.PI / bufferLength);
+                    const radius = (dataArray[i] / 256) * 200;
+
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+
+                    // Задаем цвет и рисуем точку
+                    const gradient = canvasContext.createRadialGradient(x, y, 0, x, y, 5);
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                    gradient.addColorStop(1, 'rgba(' + (255 - i) + ', ' + i + ', 0, 1)');
+
+                    canvasContext.fillStyle = gradient;
+                    canvasContext.fillRect(x, y, 5, 5);
+                }
+
+                // Запускаем следующий кадр анимации
+                requestAnimationFrame(draw);
+            }
+
+            // Запускаем анимацию рисования визуализации аудио
+            draw();
+        }
+
+        // Обработчик события "loadedmetadata" для аудио, при котором запускается визуализация
+        audioElement.addEventListener('loadedmetadata', visualize, false);
+    </script>
+</body>
+</html>

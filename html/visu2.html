@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: #222;
+        }
+    </style>
+</head>
+<body>
+    <audio id="audio" controls src="https://music.org.ru/stream"></audio>
+    <canvas id="visualizer"></canvas>
+
+    <script>
+        // Получаем элементы аудио и холст
+        const audioElement = document.getElementById('audio');
+        const canvasElement = document.getElementById('visualizer');
+
+        // Создаем контекст для рисования на холсте
+        const canvasContext = canvasElement.getContext('2d');
+
+        // Изменяем размеры холста, чтобы он заполнил всю доступную область
+        canvasElement.width = window.innerWidth;
+        canvasElement.height = window.innerHeight;
+
+        // Функция для визуализации аудио
+        function visualize() {
+            // Получаем аудио-контекст
+            const audioContext = new AudioContext();
+
+            // Создаем анализатор аудио
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audioElement);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            // Устанавливаем размеры массива данных для анализатора
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            // Очищаем холст перед рисованием нового кадра
+            function clearCanvas() {
+                canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            }
+
+            // Рисуем визуализацию аудио
+            function draw() {
+                // Получаем данные из анализатора
+                analyser.getByteFrequencyData(dataArray);
+
+                // Очищаем холст
+                clearCanvas();
+
+                // Определяем параметры для рисования
+                const barWidth = (canvasElement.width / bufferLength) * 2.0;
+                let barHeight;
+                let x = 0;
+
+                // Рисуем каждую "полосу" на холсте
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i];
+
+                    // Задаем цвет и рисуем прямоугольник
+                    const gradient = canvasContext.createLinearGradient(0, 0, 0, canvasElement.height);
+                    gradient.addColorStop(0, "rgb(255, " + (barHeight + 100) + ", 0)");
+                    gradient.addColorStop(1, "rgb(255, " + (barHeight + 50) + ", 0)");
+
+                    canvasContext.fillStyle = gradient;
+                    canvasContext.fillRect(x, canvasElement.height - barHeight, barWidth, barHeight);
+
+                    // Увеличиваем x для следующей полосы
+                    x += barWidth + 2;
+                }
+
+                // Запускаем следующий кадр анимации
+                requestAnimationFrame(draw);
+            }
+
+            // Запускаем анимацию рисования визуализации аудио
+            draw();
+        }
+
+        // Обработчик события "loadedmetadata" для аудио, при котором запускается визуализация
+        audioElement.addEventListener('loadedmetadata', visualize, false);
+    </script>
+</body>
+</html>
